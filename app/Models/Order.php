@@ -34,6 +34,11 @@ class Order extends Model
     ];
 
     /**
+     * Default relationships to eager load.
+     */
+    protected $with = ['orderItems.menu'];
+
+    /**
      * Boot the model.
      */
     protected static function boot()

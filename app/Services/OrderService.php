@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\Menu;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Events\NewOrderCreated;
+use App\Events\OrderStatusUpdated;
 use Illuminate\Support\Facades\DB;
 
 class OrderService
@@ -29,7 +31,7 @@ class OrderService
             $totalAmount = 0;
             foreach ($data['items'] as $item) {
                 $menu = Menu::findOrFail($item['menu_id']);
-                
+
                 // Check if menu is available
                 if (!$menu->is_available) {
                     throw new \Exception("Menu '{$menu->name}' is not available");
@@ -50,6 +52,9 @@ class OrderService
 
             // Update order total
             $order->update(['total_amount' => $totalAmount]);
+
+            // Dispatch new order event
+            event(new NewOrderCreated($order->load('orderItems.menu')));
 
             return $order;
         });
@@ -83,7 +88,7 @@ class OrderService
                 $totalAmount = 0;
                 foreach ($data['items'] as $item) {
                     $menu = Menu::findOrFail($item['menu_id']);
-                    
+
                     if (!$menu->is_available) {
                         throw new \Exception("Menu '{$menu->name}' is not available");
                     }
@@ -128,6 +133,9 @@ class OrderService
         }
 
         $order->update(['status' => $status]);
+
+        // Dispatch order status updated event
+        event(new OrderStatusUpdated($order->load('orderItems.menu')));
 
         return $order;
     }

@@ -92,9 +92,14 @@ import { Bell, Settings, LogOut } from 'lucide-vue-next'
 import AppSidebar from '@/components/admin/AppSidebar.vue'
 import Breadcrumbs from '@/components/Breadcrumbs.vue'
 import type { User } from '@/types'
+import { useRealTimeAdmin, useRealTimeNotifications } from '@/composables/useRealTime'
 
 const page = usePage()
 const user = computed((): User | undefined => (page.props as any).auth?.user)
+
+// Setup real-time features
+const { isConnected, lastUpdate } = useRealTimeAdmin()
+const { showNotification } = useRealTimeNotifications()
 
 const breadcrumbs = computed(() => {
   const routeName = (page.props as any).ziggy?.route?.name || ''

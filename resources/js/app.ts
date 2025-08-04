@@ -8,6 +8,7 @@ import { ZiggyVue } from 'ziggy-js';
 import { createPinia } from 'pinia';
 import axios from 'axios';
 import { initializeTheme } from './composables/useAppearance';
+import './echo';
 
 // Setup axios defaults
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';

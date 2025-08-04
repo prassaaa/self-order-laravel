@@ -19,6 +19,52 @@ class MenuController extends Controller
     ) {}
 
     /**
+     * @OA\Get(
+     *     path="/api/menus",
+     *     tags={"Menus"},
+     *     summary="Get list of menus",
+     *     description="Retrieve a paginated list of available menu items with optional filtering",
+     *     @OA\Parameter(
+     *         name="category_id",
+     *         in="query",
+     *         description="Filter by category ID",
+     *         required=false,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         description="Search menu items by name",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="available",
+     *         in="query",
+     *         description="Filter by availability",
+     *         required=false,
+     *         @OA\Schema(type="boolean")
+     *     ),
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="Number of items per page",
+     *         required=false,
+     *         @OA\Schema(type="integer", default=15)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="array", @OA\Items(ref="#/components/schemas/Menu")),
+     *             @OA\Property(property="current_page", type="integer"),
+     *             @OA\Property(property="last_page", type="integer"),
+     *             @OA\Property(property="per_page", type="integer"),
+     *             @OA\Property(property="total", type="integer")
+     *         )
+     *     )
+     * )
+     *
      * Display a listing of the resource.
      */
     public function index(Request $request): AnonymousResourceCollection

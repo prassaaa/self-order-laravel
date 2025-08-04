@@ -197,11 +197,15 @@ import {
 } from 'lucide-vue-next'
 import { useAdminStore } from '@/stores/admin'
 import type { User } from '@/types'
+import { useRealTimeKasir } from '@/composables/useRealTime'
 
 const page = usePage()
 const adminStore = useAdminStore()
 
 const user = computed((): User | undefined => (page.props as any).auth?.user)
+
+// Setup real-time features for kasir
+const { isConnected } = useRealTimeKasir()
 const refreshing = ref(false)
 const lastUpdated = ref(new Date().toLocaleTimeString())
 

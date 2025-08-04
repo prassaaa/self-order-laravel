@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Order;
 use App\Models\Payment;
+use App\Events\PaymentProcessed;
 use Illuminate\Support\Facades\DB;
 
 class PaymentService
@@ -97,6 +98,9 @@ class PaymentService
 
             // Update order payment status
             $this->updateOrderPaymentStatus($order);
+
+            // Dispatch payment processed event
+            event(new PaymentProcessed($payment->load('order')));
 
             return $payment;
         });
@@ -202,16 +206,16 @@ class PaymentService
     {
         // This would integrate with actual payment gateways
         // For now, we'll simulate the process
-        
+
         $method = $data['method'];
         $amount = $data['amount'];
-        
+
         // Simulate payment processing
         $transactionId = 'TXN-' . time() . '-' . strtoupper(substr($method, 0, 3));
-        
+
         // In real implementation, this would call payment gateway APIs
         $success = true; // Simulate success
-        
+
         return [
             'success' => $success,
             'transaction_id' => $transactionId,

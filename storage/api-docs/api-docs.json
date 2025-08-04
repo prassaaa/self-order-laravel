@@ -1,0 +1,617 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Self Order Laravel API",
+        "description": "A comprehensive self-ordering system API for restaurants and cafes",
+        "contact": {
+            "name": "API Support",
+            "email": "support@example.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://my-default-host.com",
+            "description": "API Server"
+        }
+    ],
+    "paths": {
+        "/api/menus": {
+            "get": {
+                "tags": [
+                    "Menus"
+                ],
+                "summary": "Get list of menus",
+                "description": "Retrieve a paginated list of available menu items with optional filtering",
+                "operationId": "66cdc316f9ec472493d9f087d61009da",
+                "parameters": [
+                    {
+                        "name": "category_id",
+                        "in": "query",
+                        "description": "Filter by category ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search menu items by name",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "available",
+                        "in": "query",
+                        "description": "Filter by availability",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Menu"
+                                            }
+                                        },
+                                        "current_page": {
+                                            "type": "integer"
+                                        },
+                                        "last_page": {
+                                            "type": "integer"
+                                        },
+                                        "per_page": {
+                                            "type": "integer"
+                                        },
+                                        "total": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Menu": {
+                "title": "Menu",
+                "description": "Menu item model",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "category_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Nasi Goreng Spesial"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Nasi goreng dengan telur, ayam, dan sayuran"
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 25000
+                    },
+                    "formatted_price": {
+                        "type": "string",
+                        "example": "Rp 25.000"
+                    },
+                    "image": {
+                        "type": "string",
+                        "example": "menus/nasi-goreng.jpg"
+                    },
+                    "image_url": {
+                        "type": "string",
+                        "example": "http://localhost/storage/menus/nasi-goreng.jpg"
+                    },
+                    "is_available": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "sort_order": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "category": {
+                        "$ref": "#/components/schemas/Category"
+                    }
+                },
+                "type": "object"
+            },
+            "Category": {
+                "title": "Category",
+                "description": "Menu category model",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Main Course"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "main-course"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Main course dishes"
+                    },
+                    "image": {
+                        "type": "string",
+                        "example": "categories/main-course.jpg"
+                    },
+                    "image_url": {
+                        "type": "string",
+                        "example": "http://localhost/storage/categories/main-course.jpg"
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "sort_order": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "menus_count": {
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Order": {
+                "title": "Order",
+                "description": "Order model",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "order_number": {
+                        "type": "string",
+                        "example": "ORD-001"
+                    },
+                    "table_number": {
+                        "type": "string",
+                        "example": "T-01"
+                    },
+                    "customer_name": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "customer_phone": {
+                        "type": "string",
+                        "example": "081234567890"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "pending",
+                            "confirmed",
+                            "preparing",
+                            "ready",
+                            "completed",
+                            "cancelled"
+                        ],
+                        "example": "pending"
+                    },
+                    "payment_status": {
+                        "type": "string",
+                        "enum": [
+                            "pending",
+                            "paid",
+                            "failed",
+                            "refunded"
+                        ],
+                        "example": "pending"
+                    },
+                    "total_amount": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 75000
+                    },
+                    "formatted_total": {
+                        "type": "string",
+                        "example": "Rp 75.000"
+                    },
+                    "notes": {
+                        "type": "string",
+                        "example": "Extra spicy"
+                    },
+                    "is_paid": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "can_be_cancelled": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_at_human": {
+                        "type": "string",
+                        "example": "2 minutes ago"
+                    },
+                    "order_items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OrderItem"
+                        }
+                    },
+                    "payments": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Payment"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "OrderItem": {
+                "title": "OrderItem",
+                "description": "Order item model",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "order_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "menu_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "quantity": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "price": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 25000
+                    },
+                    "subtotal": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 50000
+                    },
+                    "notes": {
+                        "type": "string",
+                        "example": "No onions"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "menu": {
+                        "$ref": "#/components/schemas/Menu"
+                    }
+                },
+                "type": "object"
+            },
+            "Payment": {
+                "title": "Payment",
+                "description": "Payment model",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "order_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "amount": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 75000
+                    },
+                    "method": {
+                        "type": "string",
+                        "enum": [
+                            "cash",
+                            "qris",
+                            "bank_transfer",
+                            "e_wallet"
+                        ],
+                        "example": "cash"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "pending",
+                            "completed",
+                            "failed",
+                            "refunded"
+                        ],
+                        "example": "completed"
+                    },
+                    "transaction_id": {
+                        "type": "string",
+                        "example": "TXN-123456"
+                    },
+                    "notes": {
+                        "type": "string",
+                        "example": "Cash payment"
+                    },
+                    "processed_by": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "processed_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "title": "User",
+                "description": "User model",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "john@example.com"
+                    },
+                    "email_verified_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "avatar": {
+                        "type": "string",
+                        "example": "avatars/john.jpg"
+                    },
+                    "roles": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "admin"
+                        ]
+                    },
+                    "permissions": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "DashboardStats": {
+                "title": "DashboardStats",
+                "description": "Dashboard statistics",
+                "properties": {
+                    "total_orders": {
+                        "type": "integer",
+                        "example": 150
+                    },
+                    "pending_orders": {
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "completed_orders": {
+                        "type": "integer",
+                        "example": 140
+                    },
+                    "today_orders": {
+                        "type": "integer",
+                        "example": 25
+                    },
+                    "today_revenue": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 1500000
+                    },
+                    "total_revenue": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 15000000
+                    },
+                    "popular_items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/PopularItem"
+                        }
+                    },
+                    "recent_orders": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Order"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "PopularItem": {
+                "title": "PopularItem",
+                "description": "Popular menu item statistics",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Nasi Goreng Spesial"
+                    },
+                    "total_ordered": {
+                        "type": "integer",
+                        "example": 50
+                    },
+                    "revenue": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 1250000
+                    }
+                },
+                "type": "object"
+            },
+            "ApiResponse": {
+                "title": "ApiResponse",
+                "description": "Standard API response",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Operation successful"
+                    },
+                    "data": {
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "ValidationError": {
+                "title": "ValidationError",
+                "description": "Validation error response",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "The given data was invalid."
+                    },
+                    "errors": {
+                        "properties": {
+                            "field_name": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "example": "The field is required."
+                                }
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "ErrorResponse": {
+                "title": "ErrorResponse",
+                "description": "Error response",
+                "properties": {
+                    "success": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "An error occurred"
+                    },
+                    "error": {
+                        "type": "string",
+                        "example": "Detailed error message"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Menus",
+            "description": "Menu management endpoints"
+        }
+    ]
+}
