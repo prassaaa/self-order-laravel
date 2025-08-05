@@ -10,20 +10,20 @@
               <span class="block">Dengan Mudah</span>
             </h1>
             <p class="text-lg lg:text-xl mb-8 opacity-90">
-              Sistem pemesanan mandiri yang memudahkan Anda menikmati hidangan lezat 
+              Sistem pemesanan mandiri yang memudahkan Anda menikmati hidangan lezat
               tanpa perlu menunggu lama. Pesan sekarang, bayar mudah!
             </p>
             <div class="flex flex-col sm:flex-row gap-4">
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 variant="secondary"
                 @click="router.visit('/menu')"
               >
                 <UtensilsCrossed class="h-5 w-5 mr-2" />
                 Lihat Menu
               </Button>
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 variant="outline"
                 class="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
                 @click="scrollToHowItWorks"
@@ -34,8 +34,15 @@
           </div>
           <div class="hidden lg:block">
             <div class="relative">
-              <div class="w-full h-96 bg-primary-foreground/10 rounded-2xl flex items-center justify-center">
-                <UtensilsCrossed class="h-32 w-32 text-primary-foreground/50" />
+              <div class="w-full h-96 rounded-2xl flex items-center justify-center">
+                <Vue3Lottie
+                  :animation-data="heroAnimation"
+                  :height="400"
+                  :width="400"
+                  :loop="true"
+                  :auto-play="true"
+                  class="max-w-full max-h-full"
+                />
               </div>
             </div>
           </div>
@@ -62,8 +69,8 @@
         </div>
 
         <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <MenuCard 
-            v-for="menu in menuStore.popularMenus" 
+          <MenuCard
+            v-for="menu in menuStore.popularMenus"
             :key="menu.id"
             :menu="menu"
             @add-to-cart="addToCart"
@@ -71,8 +78,8 @@
         </div>
 
         <div class="text-center mt-12">
-          <Button 
-            size="lg" 
+          <Button
+            size="lg"
             variant="outline"
             @click="router.visit('/menu')"
           >
@@ -145,11 +152,11 @@
             Siap untuk Memesan?
           </h2>
           <p class="text-lg lg:text-xl mb-8 opacity-90 max-w-2xl mx-auto">
-            Jangan tunggu lagi! Mulai jelajahi menu kami dan nikmati pengalaman 
+            Jangan tunggu lagi! Mulai jelajahi menu kami dan nikmati pengalaman
             pemesanan yang mudah dan cepat.
           </p>
-          <Button 
-            size="lg" 
+          <Button
+            size="lg"
             variant="secondary"
             @click="router.visit('/menu')"
           >
@@ -163,7 +170,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { router } from '@inertiajs/vue3'
 import CustomerLayout from '@/layouts/CustomerLayout.vue'
 import { Button } from '@/components/ui/button'
@@ -172,13 +179,17 @@ import { UtensilsCrossed, ArrowRight } from 'lucide-vue-next'
 import { useMenuStore } from '@/stores/menu'
 import { useCartStore } from '@/stores/cart'
 import MenuCard from '@/components/customer/MenuCard.vue'
+import { Vue3Lottie } from 'vue3-lottie'
 
 const menuStore = useMenuStore()
 const cartStore = useCartStore()
 
+// Load Lottie animation
+const heroAnimation = ref(null)
+
 const scrollToHowItWorks = () => {
-  document.getElementById('how-it-works')?.scrollIntoView({ 
-    behavior: 'smooth' 
+  document.getElementById('how-it-works')?.scrollIntoView({
+    behavior: 'smooth'
   })
 }
 
@@ -186,7 +197,20 @@ const addToCart = (menu: any, quantity: number = 1, notes?: string) => {
   cartStore.addItem(menu, quantity, notes)
 }
 
+// Load animation data
+const loadAnimation = async () => {
+  try {
+    const response = await fetch('/assets/animation/hero-section.json')
+    heroAnimation.value = await response.json()
+  } catch (error) {
+    console.error('Failed to load animation:', error)
+  }
+}
+
 onMounted(async () => {
-  await menuStore.initializeData()
+  await Promise.all([
+    menuStore.initializeData(),
+    loadAnimation()
+  ])
 })
 </script>

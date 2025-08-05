@@ -36,6 +36,7 @@
         "laravel-echo": "^2.1.7",
         "laravel-vite-plugin": "^2.0.0",
         "lodash-es": "^4.17.21",
+        "lottie-web": "^5.13.0",
         "lucide-vue-next": "^0.468.0",
         "pinia": "^3.0.3",
         "pusher-js": "^8.4.0",
@@ -47,6 +48,7 @@
         "typescript": "^5.2.2",
         "vite": "^7.0.4",
         "vue": "^3.5.13",
+        "vue3-lottie": "^3.3.1",
         "ziggy-js": "^2.4.2"
     },
     "optionalDependencies": {
