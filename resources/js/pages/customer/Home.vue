@@ -67,7 +67,7 @@
             <!-- Stats -->
             <div ref="heroStats" class="grid grid-cols-3 gap-6 pt-8 hero-element opacity-0 translate-y-8">
               <div class="text-center stats-item">
-                <div class="text-3xl font-bold text-primary">500+</div>
+                <div class="text-3xl font-bold text-primary">{{ formattedMenusCount }}</div>
                 <div class="text-sm text-gray-600">Menu Tersedia</div>
               </div>
               <div class="text-center stats-item">
@@ -333,7 +333,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, nextTick } from 'vue'
+import { onMounted, ref, nextTick, computed } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -351,6 +351,19 @@ gsap.registerPlugin(ScrollTrigger)
 
 const menuStore = useMenuStore()
 const cartStore = useCartStore()
+
+// Computed properties for stats
+const availableMenusCount = computed(() => {
+  return menuStore.availableMenus.length
+})
+
+const formattedMenusCount = computed(() => {
+  const count = availableMenusCount.value
+  if (count === 0) return '0'
+  if (count < 100) return count.toString()
+  if (count < 1000) return `${Math.floor(count / 100) * 100}+`
+  return `${Math.floor(count / 1000)}k+`
+})
 
 // Lottie animation state
 const lottieAnimationData = ref<any>(null)
