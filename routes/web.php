@@ -26,9 +26,23 @@ Route::get('/order/{order}', function ($orderId) {
     ]);
 })->name('order.show');
 
-// Admin Dashboard (Protected)
+// Dashboard dengan redirect berdasarkan role
 Route::get('dashboard', function () {
-    return Inertia::render('admin/Dashboard');
+    $user = auth()->user();
+
+    // Jika user adalah admin, tampilkan admin dashboard
+    if ($user->hasRole('admin')) {
+        return Inertia::render('admin/Dashboard');
+    }
+
+    // Jika user adalah kasir, redirect ke kasir dashboard
+    if ($user->hasRole('kasir')) {
+        return redirect()->route('kasir.dashboard');
+    }
+
+    // Jika tidak memiliki role yang sesuai, logout
+    auth()->logout();
+    return redirect()->route('login')->with('error', 'Anda tidak memiliki akses ke sistem ini.');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Admin Routes
@@ -97,7 +111,18 @@ Route::middleware(['auth', 'verified', 'role:admin,kasir'])->prefix('admin')->na
 });
 
 // Kasir Routes
-Route::middleware(['auth', 'verified', 'role:admin,kasir'])->prefix('kasir')->name('kasir.')->group(function () {
+Route::middleware(['auth', 'verified'])->prefix('kasir')->name('kasir.')->group(function () {
+    // Kasir Dashboard
+    Route::get('/dashboard', function () {
+        // Manual role check untuk kasir
+        $user = auth()->user();
+        if (!$user->hasRole('kasir') && !$user->hasRole('admin')) {
+            abort(403, 'Unauthorized. Kasir access required.');
+        }
+
+        return Inertia::render('kasir/Dashboard');
+    })->name('dashboard');
+
     // Orders Management
     Route::get('/orders', function () {
         return Inertia::render('kasir/Orders');

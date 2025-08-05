@@ -79,8 +79,8 @@
         </SidebarMenu>
       </SidebarGroup>
 
-      <!-- Menu Management -->
-      <SidebarGroup>
+      <!-- Menu Management (Admin only) -->
+      <SidebarGroup v-if="canManageUsers">
         <SidebarGroupLabel>Menu</SidebarGroupLabel>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -102,8 +102,8 @@
         </SidebarMenu>
       </SidebarGroup>
 
-      <!-- Reports -->
-      <SidebarGroup>
+      <!-- Reports (Admin only) -->
+      <SidebarGroup v-if="canManageUsers">
         <SidebarGroupLabel>Reports</SidebarGroupLabel>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -140,8 +140,8 @@
         </SidebarMenu>
       </SidebarGroup>
 
-      <!-- Settings -->
-      <SidebarGroup>
+      <!-- Settings (Admin only) -->
+      <SidebarGroup v-if="canManageUsers">
         <SidebarGroupLabel>Settings</SidebarGroupLabel>
         <SidebarMenu>
           <SidebarMenuItem>

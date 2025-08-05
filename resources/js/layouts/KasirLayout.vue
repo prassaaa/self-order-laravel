@@ -95,6 +95,17 @@
       <div class="container mx-auto px-4">
         <div class="flex space-x-8">
           <Link
+            :href="route('kasir.dashboard')"
+            class="flex items-center space-x-2 py-4 px-1 border-b-2 text-sm font-medium transition-colors"
+            :class="route().current('kasir.dashboard')
+              ? 'border-primary text-primary'
+              : 'border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground'"
+          >
+            <BarChart3 class="h-4 w-4" />
+            <span>Dashboard</span>
+          </Link>
+
+          <Link
             :href="route('kasir.orders')"
             class="flex items-center space-x-2 py-4 px-1 border-b-2 text-sm font-medium transition-colors"
             :class="route().current('kasir.orders')

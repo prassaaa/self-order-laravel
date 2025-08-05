@@ -12,15 +12,28 @@ class RoleMiddleware
      * Handle an incoming request.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     * @param  string  $role
+     * @param  string  $roles
      */
-    public function handle(Request $request, Closure $next, string $role): Response
+    public function handle(Request $request, Closure $next, string $roles): Response
     {
         if (!auth()->check()) {
             return redirect()->route('login');
         }
 
-        if (!auth()->user()->hasRole($role)) {
+        // Support multiple roles separated by comma
+        $allowedRoles = explode(',', $roles);
+        $user = auth()->user();
+
+        $hasAccess = false;
+        foreach ($allowedRoles as $role) {
+            $trimmedRole = trim($role);
+            if ($user->hasRole($trimmedRole)) {
+                $hasAccess = true;
+                break;
+            }
+        }
+
+        if (!$hasAccess) {
             abort(403, 'Unauthorized. You do not have the required role.');
         }
 
