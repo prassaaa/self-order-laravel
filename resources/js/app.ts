@@ -6,6 +6,7 @@ import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import { createPinia } from 'pinia';
+import { MotionPlugin } from '@vueuse/motion';
 import axios from 'axios';
 import { initializeTheme } from './composables/useAppearance';
 import './echo';
@@ -32,6 +33,7 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue)
             .use(pinia)
+            .use(MotionPlugin)
             .mount(el);
     },
     progress: {
